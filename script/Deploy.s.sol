@@ -11,9 +11,17 @@ contract Deploy is Script {
 
     function setUp() public {}
 
-    function run() public {
-        vm.startBroadcast();
+    modifier broadcast() {
+        uint256 privKey = vm.envUint("DEPLOYMENT_PRIVATE_KEY");
+        vm.startBroadcast(privKey);
+        console.log("Deploying from:", vm.addr(privKey));
 
+        _;
+
+        vm.stopBroadcast();
+    }
+
+    function run() public broadcast {
         delegateRegistry = new DelegateRegistry();
         console.log("Delegate registry", address(delegateRegistry));
 
@@ -21,7 +29,5 @@ contract Deploy is Script {
         address stakeManager = vm.envAddress("STAKE_MANAGER");
         erc20VotesWrapper = new ERC20VotesWrapper(stakeManager);
         console.log("ERC20 Votes wrapper", address(erc20VotesWrapper));
-
-        vm.stopBroadcast();
     }
 }
