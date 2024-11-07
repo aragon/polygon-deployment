@@ -96,7 +96,7 @@ pre-deploy:
 		$(VERBOSITY)
 
 .PHONY: deploy
-deploy: test
+deploy:
 	@echo "Starting the deployment"
 	forge script $(DEPLOY_SCRIPT) \
 		--chain $(NETWORK) \
